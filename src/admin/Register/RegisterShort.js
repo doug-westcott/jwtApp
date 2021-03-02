@@ -6,17 +6,17 @@ function RegisterShort({ register }) {
     const [student, setStudent] = useState(null)
     useEffect(() => (async () => setStudent(await db.Students.findOne(register.studentid)))(), [register])
 
-    const [course, setCourse] = useState(null)
-    useEffect(() => (async () => setCourse(await db.Courses.findOne(register.courseid)))(), [register])
+    const [product, setProduct] = useState(null)
+    useEffect(() => (async () => setProduct(await db.Products.findOne(register.productid)))(), [register])
 
     return (
         student
         &&
-        course
+        product
         &&
         <tr>
             <td>{student.name}</td>
-            <td>{course.title}</td>
+            <td>{product.name}</td>
             <td>{register.mark}</td>
         </tr>
     );

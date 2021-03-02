@@ -15,29 +15,29 @@ export default function RegisterDetail() {
   const [student, setStudent] = useState(null)
   useEffect(() => (async () => register && setStudent(await db.Students.findOne(register.studentid)))(), [register])
 
-  const [course, setCourse] = useState(null)
-  useEffect(() => (async () => register && setCourse(await db.Courses.findOne(register.courseid)))(), [register])
+  const [product, setProduct] = useState(null)
+  useEffect(() => (async () => register && setProduct(await db.Products.findOne(register.productid)))(), [register])
 
   const [studentRegisters, setStudentRegisters] = useState([])
   useEffect(() => (async () => register && setStudentRegisters(await db.Registers.findByStudentid(register.studentid)))(), [register])
 
-  const [courseRegisters, setCourseRegisters] = useState([])
-  useEffect(() => (async () => register && setCourseRegisters(await db.Registers.findByCourseid(register.courseid)))(), [register])
+  const [productRegisters, setProductRegisters] = useState([])
+  useEffect(() => (async () => register && setProductRegisters(await db.Registers.findByProductid(register.productid)))(), [register])
 
   return (
     register
     &&
     student
     &&
-    course
+    product
     &&
     <>
       <h1>Registration Details</h1>
       <dl className="row">
         <dt className="col-sm-3">Student</dt>
         <dd className="col-sm-9">{student.name}</dd>
-        <dt className="col-sm-3">Course</dt>
-        <dd className="col-sm-9">{course.title}</dd>
+        <dt className="col-sm-3">Product</dt>
+        <dd className="col-sm-9">{product.name}</dd>
         <dt className="col-sm-3">Mark</dt>
         <dd className="col-sm-9">{register.mark}</dd>
       </dl>
@@ -46,7 +46,7 @@ export default function RegisterDetail() {
         <thead>
           <tr>
             <th>Student</th>
-            <th>Course</th>
+            <th>Product</th>
           </tr>
         </thead>
         <tbody>
@@ -59,17 +59,17 @@ export default function RegisterDetail() {
           }
         </tbody>
       </Table>
-      <h1>Others also registered in {course.title}</h1>
+      <h1>Others also registered in {product.name}</h1>
       <Table striped bordered hover variant="dark" size="sm">
         <thead>
           <tr>
             <th>Student</th>
-            <th>Course</th>
+            <th>Product</th>
           </tr>
         </thead>
         <tbody>
           {
-            courseRegisters
+            productRegisters
               .filter(register => register.id !== id)
               .map(register =>
                 <RegisterShort key={register.id} register={register} />

@@ -42,7 +42,7 @@ export default function StudentDetail() {
         <thead>
           <tr>
             <th>Student</th>
-            <th>Course</th>
+            <th>Product</th>
             <th>Mark</th>
           </tr>
         </thead>

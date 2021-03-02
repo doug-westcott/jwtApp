@@ -4,19 +4,19 @@ import RegisterShort from '../Register/RegisterShort'
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 
-export default function SearchRegistersByCourseSubject() {
+export default function SearchRegistersByProductSubject() {
 
     const [subjects, setSubjects] = useState([])
     const [subject, setSubject] = useState("")
 
-    useEffect(() => (async () => setSubjects(await db.Courses.findDistinctSubjects()))(), [])
+    useEffect(() => (async () => setSubjects(await db.Products.findDistinctSubjects()))(), [])
 
     const [registers, setRegisters] = useState([])
-    useEffect(() => (async () => setRegisters(await db.Registers.findByCourseSubject(subject)))(), [subject])
+    useEffect(() => (async () => setRegisters(await db.Registers.findByProductSubject(subject)))(), [subject])
 
     return (
         <>
-            <h1>Search Registrations By Course Subject</h1>
+            <h1>Search Registrations By Product Subject</h1>
             <Form.Control as="select" size="sm" onChange={event => setSubject(event.target.value)} value={subject} >
                 <option key="" value="" disabled>Select Subject</option>
                 {
@@ -30,7 +30,7 @@ export default function SearchRegistersByCourseSubject() {
                 <thead>
                     <tr>
                         <th>Student</th>
-                        <th>Course</th>
+                        <th>Product</th>
                         <th>Mark</th>
                         <th></th>
                     </tr>

@@ -6,19 +6,19 @@ import { Link } from "react-router-dom";
 export default function Register({ register, remove, edit }) {
 
     const [student, setStudent] = useState(null)
-    const [course, setCourse] = useState(null)
+    const [product, setProduct] = useState(null)
 
     useEffect(() => (async () => setStudent(await db.Students.findOne(register.studentid)))(), [register])
-    useEffect(() => (async () => setCourse(await db.Courses.findOne(register.courseid)))(), [register])
+    useEffect(() => (async () => setProduct(await db.Products.findOne(register.productid)))(), [register])
 
     return (
         student
         &&
-        course
+        product
         &&
         <tr>
             <td>{student.name}</td>
-            <td>{course.title}</td>
+            <td>{product.name}</td>
             <td>{register.mark}</td>
             <td>
                 <Button size="sm" variant="light" onClick={() => remove(register.id)}>X</Button>

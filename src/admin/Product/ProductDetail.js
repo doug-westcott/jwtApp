@@ -6,40 +6,40 @@ import {
 } from "react-router-dom";
 import RegisterShort from '../Register/RegisterShort'
 
-export default function CourseDetail() {
+export default function ProductDetail() {
 
   const { id: stringId } = useParams();
   const id = 1 * stringId
 
-  const [course, setCourse] = useState(null)
-  useEffect(() => (async () => setCourse(await db.Courses.findOne(id)))(), [id])
+  const [product, setProduct] = useState(null)
+  useEffect(() => (async () => setProduct(await db.Products.findOne(id)))(), [id])
 
   const [registers, setRegisters] = useState([])
-  useEffect(() => (async () => setRegisters(await db.Registers.findByCourseid(id)))(), [id])
+  useEffect(() => (async () => setRegisters(await db.Registers.findByProductid(id)))(), [id])
 
-  console.log('findByCourseid', registers)
+  console.log('findByProductid', registers)
 
   return (
-    course
+    product
     &&
     <div>
-      <h1>Course</h1>
+      <h1>Product</h1>
       <dl className="row">
         <dt className="col-sm-3">Subject</dt>
-        <dd className="col-sm-9">{course.subject}</dd>
+        <dd className="col-sm-9">{product.subject}</dd>
         <dt className="col-sm-3">Number</dt>
-        <dd className="col-sm-9">{course.number}</dd>
-        <dt className="col-sm-3">Title</dt>
-        <dd className="col-sm-9">{course.title}</dd>
-        <dt className="col-sm-3">Capacity</dt>
-        <dd className="col-sm-9">{course.capacity}</dd>
+        <dd className="col-sm-9">{product.number}</dd>
+        <dt className="col-sm-3">Name</dt>
+        <dd className="col-sm-9">{product.name}</dd>
+        <dt className="col-sm-3">Price</dt>
+        <dd className="col-sm-9">{product.price}</dd>
       </dl>
-      <h1>{course.title} students registered</h1>
+      <h1>{product.name} students registered</h1>
       <Table striped bordered hover variant="dark" size="sm">
         <thead>
           <tr>
             <th>Student</th>
-            <th>Course</th>
+            <th>Product</th>
             <th>Mark</th>
           </tr>
         </thead>

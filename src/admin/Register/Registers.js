@@ -8,24 +8,24 @@ import Register from './Register'
 export default function Registers() {
 
     const [students, setStudents] = useState([])
-    const [courses, setCourses] = useState([])
+    const [products, setProducts] = useState([])
     const [registers, setRegisters] = useState([])
     const [id, setId] = useState(0)
     const [mark, setMark] = useState(-1)
     const [studentid, setStudentid] = useState(0)
-    const [courseid, setCourseid] = useState(0)
+    const [productid, setProductid] = useState(0)
 
     // in React useEffect does initialization
     useEffect(() => (async () => setRegisters(await db.Registers.findAll()))(), [])
     useEffect(() => (async () => setStudents(await db.Students.findAll()))(), [])
-    useEffect(() => (async () => setCourses(await db.Courses.findAll()))(), [])
+    useEffect(() => (async () => setProducts(await db.Products.findAll()))(), [])
 
     const create = async () => {
-        await db.Registers.create(setRegisters, { mark, studentid, courseid })
+        await db.Registers.create(setRegisters, { mark, studentid, productid })
         setId(0)
         setMark(-1)
         setStudentid(0)
-        setCourseid(0)
+        setProductid(0)
     }
 
     const remove = async id => await db.Registers.remove(setRegisters, id)
@@ -36,41 +36,41 @@ export default function Registers() {
         setId(register.id)
         setMark(register.mark)
         setStudentid(register.studentid)
-        setCourseid(register.courseid)
+        setProductid(register.productid)
     }
 
     // update is step 2
     const update = async () => {
-        await db.Registers.update(setRegisters, { id, mark, studentid, courseid })
+        await db.Registers.update(setRegisters, { id, mark, studentid, productid })
         setId(0)
         setMark(-1)
         setStudentid(0)
-        setCourseid(0)
+        setProductid(0)
     }
 
     const [validCreate, setValidCreate] = useState(false)
     useEffect(() => (async () => {
-        const course = courseid > 0 && await db.Courses.findOne(courseid)
+        const product = productid > 0 && await db.Products.findOne(productid)
         setValidCreate(
             //mark >= -1 &&
             studentid > 0 &&
-            courseid > 0 &&
+            productid > 0 &&
             await db.Students.findOne(studentid) !== undefined &&
-            course !== undefined &&
-            course.capacity > registers.filter(register => register.courseid === courseid).length &&
-            (await db.Registers.findByStudentidAndCourseid(studentid, courseid)).length === 0
+            product !== undefined &&
+            product.price > registers.filter(register => register.productid === productid).length &&
+            (await db.Registers.findByStudentidAndProductid(studentid, productid)).length === 0
     )
-    })(), [mark, studentid, courseid, registers])
+    })(), [mark, studentid, productid, registers])
 
     const [validUpdate, setValidUpdate] = useState(false)
     useEffect(() => (async () => setValidUpdate(
         id > 0 &&
         mark >= -1 &&
         studentid > 0 &&
-        courseid > 0 &&
+        productid > 0 &&
         await db.Students.findOne(studentid) !== undefined &&
-        await db.Courses.findOne(courseid) !== undefined
-    ))(), [id, mark, studentid, courseid])
+        await db.Products.findOne(productid) !== undefined
+    ))(), [id, mark, studentid, productid])
 
     return (
         <div>
@@ -79,7 +79,7 @@ export default function Registers() {
                 <thead>
                     <tr>
                         <th>Student</th>
-                        <th>Course</th>
+                        <th>Product</th>
                         <th>Mark</th>
                         <th></th>
                     </tr>
@@ -97,11 +97,11 @@ export default function Registers() {
                             </Form.Control>
                         </td>
                         <td>
-                            <Form.Control as="select" size="sm" value={courseid} placeholder="Course" onChange={event => setCourseid(1 * event.target.value)}>
-                                <option key={0} value={0} disabled>Select Course</option>
+                            <Form.Control as="select" size="sm" value={productid} placeholder="Product" onChange={event => setProductid(1 * event.target.value)}>
+                                <option key={0} value={0} disabled>Select Product</option>
                                 {
-                                    courses.map(course =>
-                                        <option key={course.id} value={course.id}>{course.title}</option>
+                                    products.map(product =>
+                                        <option key={product.id} value={product.id}>{product.name}</option>
                                     )
                                 }
                             </Form.Control>
