@@ -1,11 +1,13 @@
+import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 export default function Logout({ set }) {
 
     const history = useHistory()
-    
-    history.push("/")
-    set(null)
+    useEffect(() => {
+        history.push("/")
+        set(null)
+    }, [history, set])
 
     return null
 

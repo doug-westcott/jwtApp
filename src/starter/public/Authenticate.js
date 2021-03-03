@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import authenticate from '../auth'
 import { useHistory } from "react-router-dom";
 
 export default function Authenticate({ type, set }) {
@@ -10,11 +9,29 @@ export default function Authenticate({ type, set }) {
     const [password, setPassword] = useState("")
 
     const history = useHistory()
-    
+
     const handleAuthenticate = async () => {
-        const jwtUser = await authenticate(type, username, password)
-        set(jwtUser)
-        history.push("/")
+        const response = await fetch(
+            `${type.toLowerCase()}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username,
+                    password
+                })
+            }
+        )
+        let jwtUser = null
+        if (response.ok) {
+            jwtUser = await response.json()
+            if (jwtUser) {
+                set(jwtUser)
+                history.push("/")
+            }
+        } else {
+            console.log('response not ok', response)
+        }
     }
 
     const [validAuthenticate, setValidAuthenticate] = useState(false)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import 'bootswatch/dist/darkly/bootstrap.min.css'
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
@@ -9,50 +9,44 @@ import {
     Route,
     Link
 } from "react-router-dom"
-import Authenticate from './public/Authenticate'
-import Home from './public/Home'
-import Profile from './user/Profile'
-import Logout from './user/Logout'
-import JwtUserContext from './JwtUserContext'
+import Authenticate from './starter/public/Authenticate'
+import Home from './starter/public/Home'
+import Profile from './starter/user/Profile'
+import Logout from './starter/user/Logout'
+import UserContext from './UserContext'
 import db from './db';
+
+import ProductDetail from './starter/public/ProductDetail'
 
 export default function App() {
 
-    const [jwtUser, setJwtUser] = useState(null)
+    const [jwtUser, setJwtUser] = useState(db.getJwtUser())
+    const [user, setUser] = useState(null)
 
-    const set = jwtUser => {
-        setJwtUser(jwtUser)
+    useEffect(() => (async () => {
         db.setJwtUser(jwtUser)
-    }
+        let user = null
+        if (jwtUser) {
+            user = await db.Users.findOne(jwtUser.username)
+            if (!user) {
+                await db.Users.create(users => { }, { id: jwtUser.username, name: "", role: "Customer" })
+                user = await db.Users.findOne(jwtUser.username)
+            }
+        }
+        setUser(user)
+    })(), [jwtUser])
 
-    const isLoggedIn = () => jwtUser !== null
-    const isUser = () => jwtUser?.role === "ROLE_USER"
-    const isAdmin = () => jwtUser?.role === "ROLE_ADMIN"
+    const isLoggedIn = () => user !== null
+    const isAdmin = () => user?.role === "Admin"
+    const isCustomer = () => user?.role === "Customer"
+    // const isSupport = () => user?.role === "Support"
 
-    console.log(jwtUser, isLoggedIn(), isUser(), isAdmin())
+    console.log(user, isLoggedIn(), isCustomer(), isAdmin())
 
     return (
-        <JwtUserContext.Provider value={{ jwtUser }}>
+        <UserContext.Provider value={{ user }}>
             <Router>
                 <div className="container">
-                    {/* <Navbar bg="primary" variant="dark">
-                    <Navbar.Brand as={Link} to={"/"}>Home</Navbar.Brand>
-                    <Nav className="mr-auto">
-                        <NavDropdown title="Admin">
-                            <NavDropdown.Item as={Link} to={"/students"}>Students</NavDropdown.Item>
-                            <NavDropdown.Item as={Link} to={"/products"}>Products</NavDropdown.Item>
-                            <NavDropdown.Item as={Link} to={"/registers"}>Registrations</NavDropdown.Item>
-                        </NavDropdown>
-                        <NavDropdown title="Search">
-                            <NavDropdown.Item as={Link} to={"/searchstudentsbyname"}>Students By Name</NavDropdown.Item>
-                            <NavDropdown.Item as={Link} to={"/searchstudentsbybirthdate"}>Students By Birthdate</NavDropdown.Item>
-                            <NavDropdown.Item as={Link} to={"/searchregistersbystudentname"}>Registers By Student Name</NavDropdown.Item>
-                            <NavDropdown.Item as={Link} to={"/searchregistersbyproductsubject"}>Registers By Product Subject</NavDropdown.Item>
-                        </NavDropdown>
-
-                    </Nav>
-                </Navbar> */}
-
                     <Navbar bg="primary" variant="dark" expand="sm">
                         <Navbar.Brand as={Link} to="/">React-Bootstrap</Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -60,8 +54,8 @@ export default function App() {
                             <Nav className="mr-auto">
                                 <Nav.Link as={Link} to="/">Home</Nav.Link>
                                 {
-                                    isUser() &&
-                                    <Nav.Link as={Link} to="profile">Profile</Nav.Link>
+                                    isCustomer() &&
+                                    <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
                                 }
                                 {
                                     isAdmin() &&
@@ -77,11 +71,11 @@ export default function App() {
                             {
                                 isLoggedIn()
                                     ?
-                                    <Nav.Link as={Link} to="logout">Logout</Nav.Link>
+                                    <Nav.Link as={Link} to="/logout">Logout</Nav.Link>
                                     :
                                     <>
-                                        <Nav.Link as={Link} to="register">Register</Nav.Link>
-                                        <Nav.Link as={Link} to="login">Login</Nav.Link>
+                                        <Nav.Link as={Link} to="/register">Register</Nav.Link>
+                                        <Nav.Link as={Link} to="/login">Login</Nav.Link>
                                     </>
                             }
                         </Nav>
@@ -89,19 +83,19 @@ export default function App() {
 
                     <Switch>
                         <Route path="/register">
-                            <Authenticate type="Register" set={set} />
+                            <Authenticate type="Register" set={setJwtUser} />
                         </Route>
                         <Route path="/login">
-                            <Authenticate type="Login" set={set} />
+                            <Authenticate type="Login" set={setJwtUser} />
                         </Route>
                         <Route path="/logout">
-                            <Logout set={set} />
+                            <Logout set={setJwtUser} />
                         </Route>
                         <Route path="/profile">
                             <Profile />
                         </Route>
-                        <Route path="/studentdetail/:id">
-                            {/* <StudentDetail /> */}
+                        <Route path="/productdetail/:id">
+                            <ProductDetail />
                         </Route>
                         <Route path="/productdetail/:id">
                             {/* <ProductDetail /> */}
@@ -133,6 +127,6 @@ export default function App() {
                     </Switch>
                 </div>
             </Router>
-        </JwtUserContext.Provider>
+        </UserContext.Provider>
     )
 }

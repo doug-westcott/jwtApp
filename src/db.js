@@ -6,9 +6,11 @@
 //     return date.toISOString().replace('T', ' ').replace('Z', '')
 // }
 
-let jwtUser = null
+const getJwtUser =  () => sessionStorage.getItem("jwtUser") ? JSON.parse(sessionStorage.getItem("jwtUser")) : null
+const setJwtUser = user => user ? sessionStorage.setItem("jwtUser", JSON.stringify(user)) : sessionStorage.removeItem("jwtUser")
 
 const authFetch = (url, options) => {
+    const jwtUser = getJwtUser()
     if (jwtUser) {
         options = options || {}
         options.headers = options.headers || {}
@@ -25,6 +27,7 @@ class DB {
 
 
     async create(set, item) {
+        console.log(item)
         // const response = 
         await authFetch(`/${this.table}`,
             {
@@ -116,17 +119,6 @@ class Users extends DB {
         super("users")
     }
 
-    reformatOne(item) {
-        item = super.reformatOne(item)
-        if (item) {
-            item = { ...item, id: 1 * item.id }
-        }
-        return item
-    }
-
-    async findFirstByEmail(email) {
-        return this.reformatOne(await this.find(`search/findFirstByEmail?email=${email}`))
-    }
 }
 
 class Products extends DB {
@@ -154,9 +146,8 @@ class Products extends DB {
     }
 }
 
-const setJwtUser = user => jwtUser = user
-
 const db = {
+    getJwtUser,
     setJwtUser,
     Products: new Products(),
     Users: new Users()
