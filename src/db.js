@@ -133,24 +133,50 @@ class Products extends DB {
         return item
     }
 
-    async findBySubject(subject) {
-        return this.reformatAll(await this.find(`search/findBySubject?subject=${subject}`))
-    }
-
     async findByNameContaining(name) {
         return this.reformatAll(await this.find(`search/findByNameContaining?name=${name}`))
     }
 
-    async findDistinctSubjects() {
-        return [...new Set((await this.findAll()).map(product => product.subject))]
+}
+
+class Carts extends DB {
+
+    constructor() {
+        super("carts")
     }
+
+    reformatOne(item) {
+        item = super.reformatOne(item)
+        item = { ...item, id: 1 * item.id }
+        return item
+    }
+}
+
+class Cartitems extends DB {
+
+    constructor() {
+        super("cartitems")
+    }
+
+    reformatOne(item) {
+        item = super.reformatOne(item)
+        item = { ...item, id: 1 * item.id }
+        return item
+    }
+
+    async findByProductid(id) {
+        return this.reformatAll(await this.find(`search/findByProductid?id=${id}`))
+    }
+
 }
 
 const db = {
     getJwtUser,
     setJwtUser,
     Products: new Products(),
-    Users: new Users()
+    Users: new Users(),
+    Carts: new Carts(),
+    Cartitems: new Cartitems()
 }
 
 export default db
