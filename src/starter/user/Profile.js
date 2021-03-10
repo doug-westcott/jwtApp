@@ -11,7 +11,7 @@ export default function Profile({ set }) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0]
       const extension = file.name.split('.').pop()
-      const newName = `PictureForUser${user.id}.${extension}`
+      const newName = `UsersPicture${user.id}.${extension}`
       const result = await db.uploadImage(file, newName)
       if (result.ok) {
         await db.Users.update(() => { }, { ...user, picture: `/images/${newName}` })
