@@ -134,7 +134,7 @@ export default function App() {
                         &&
                         <Switch>
                             <Route path="/profile">
-                                <Profile />
+                                <Profile set={setUser} />
                             </Route>
                         </Switch>
                     }

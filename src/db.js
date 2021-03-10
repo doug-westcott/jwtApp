@@ -6,7 +6,7 @@
 //     return date.toISOString().replace('T', ' ').replace('Z', '')
 // }
 
-const getJwtUser =  () => sessionStorage.getItem("jwtUser") ? JSON.parse(sessionStorage.getItem("jwtUser")) : null
+const getJwtUser = () => sessionStorage.getItem("jwtUser") ? JSON.parse(sessionStorage.getItem("jwtUser")) : null
 const setJwtUser = user => user ? sessionStorage.setItem("jwtUser", JSON.stringify(user)) : sessionStorage.removeItem("jwtUser")
 
 const authFetch = (url, options) => {
@@ -17,6 +17,18 @@ const authFetch = (url, options) => {
         options.headers.Authorization = `Bearer ${jwtUser.token}`
     }
     return fetch(url, options)
+}
+
+const uploadImage = async (imageFile, name) => {
+    console.log('imageFile object', imageFile)
+    const body = new FormData()
+    body.append('file', imageFile, name)
+    const result = await authFetch('/images', {
+        method: 'POST',
+        body
+    })
+    console.log('uploadImage result', result)
+    return result
 }
 
 class DB {
@@ -173,6 +185,7 @@ class Cartitems extends DB {
 const db = {
     getJwtUser,
     setJwtUser,
+    uploadImage,
     Products: new Products(),
     Users: new Users(),
     Carts: new Carts(),
