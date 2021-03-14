@@ -3,20 +3,6 @@ import db from '../../../../db'
 import Button from 'react-bootstrap/Button';
 import { Link } from "react-router-dom";
 
-
-
-// const useAsync = (set, asyncFn) => {
-//   useEffect(() => (async () => {
-//     let isMounted = true;
-//     const data = await asyncFn()
-//     if (isMounted) set(data)
-//     return () => { isMounted = false };
-//   })(), [set, asyncFn]);
-// }
-
-
-
-
 function Product({ product, edit, remove }) {
 
   const [validRemove, setValidRemove] = useState(false)

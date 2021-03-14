@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Form } from 'react-bootstrap';
 import db from '../../db';
+import Button from 'react-bootstrap/Button';
 import UserContext from '../../UserContext'
 
 export default function Profile({ set }) {
@@ -20,6 +21,10 @@ export default function Profile({ set }) {
     }
   }
 
+  const handleEmail = async () => {
+    await db.email(user.id, user.name, user.picture)
+  }
+
   console.log(user)
   return (
     user &&
@@ -34,6 +39,7 @@ export default function Profile({ set }) {
         <dd className="col-sm-9"><img alt="" src={user.picture} height="100" width="100" /></dd>
       </dl>
       <Form.File custom label="Choose new picture" onChange={handleImage} />
+      <Button size="sm" variant="light" onClick={handleEmail}>Email Me</Button>
     </>
   )
 }

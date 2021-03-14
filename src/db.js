@@ -31,6 +31,20 @@ const uploadImage = async (imageFile, name) => {
     return result
 }
 
+const email = async (to, subject, text) => {
+    const result = await authFetch('/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            to: "joe@joe.com",
+            subject: "Hi there",
+            text: "Hi again"
+        })
+    })
+    console.log('email result', result)
+    return result
+}
+
 class DB {
 
     constructor(table) {
@@ -186,6 +200,7 @@ const db = {
     getJwtUser,
     setJwtUser,
     uploadImage,
+    email,
     Products: new Products(),
     Users: new Users(),
     Carts: new Carts(),
