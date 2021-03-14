@@ -36,7 +36,7 @@ export default function Profile({ set }) {
         <dt className="col-sm-3">Name</dt>
         <dd className="col-sm-9">{user.name}</dd>
         <dt className="col-sm-3">Picture</dt>
-        <dd className="col-sm-9"><img alt="" src={user.picture} height="100" width="100" /></dd>
+        <dd className="col-sm-9"><img alt="" src={`${user.picture}?${new Date().getTime()}`} height="100" width="100" /></dd>
       </dl>
       <Form.File custom label="Choose new picture" onChange={handleImage} />
       <Button size="sm" variant="light" onClick={handleEmail}>Email Me</Button>

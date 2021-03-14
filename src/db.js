@@ -32,14 +32,10 @@ const uploadImage = async (imageFile, name) => {
 }
 
 const email = async (to, subject, text) => {
-    const result = await authFetch('/email', {
+    const result = await fetch('/email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            to: "joe@joe.com",
-            subject: "Hi there",
-            text: "Hi again"
-        })
+        body: JSON.stringify({ to, subject, text })
     })
     console.log('email result', result)
     return result
