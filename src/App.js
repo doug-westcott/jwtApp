@@ -32,7 +32,7 @@ export default function App() {
         if (jwtUser) {
             user = await db.Users.findOne(jwtUser.username)
             if (!user) {
-                await db.Users.create(users => { }, { id: jwtUser.username, name: "", role: "Customer" })
+                await db.Users.create(users => { }, { id: jwtUser.username, name: "", role: "Customer", picture: '/images/UsersPictureDefault.png' })
                 user = await db.Users.findOne(jwtUser.username)
             }
         }
