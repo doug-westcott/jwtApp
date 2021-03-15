@@ -22,7 +22,16 @@ export default function Profile({ set }) {
   }
 
   const handleEmail = async () => {
-    await db.email(user.id, user.name, user.picture)
+    await db.email(
+      user.id,
+      `Attention ${user.name}!!!`,
+      `
+      <em>Click here to reset your bank account password!!!</em>
+      <a href="http://localhost:3000/productdetail/1">
+        <img src="http://localhost:8080${user.picture}">
+      </a>
+      `
+    )
   }
 
   console.log(user)
